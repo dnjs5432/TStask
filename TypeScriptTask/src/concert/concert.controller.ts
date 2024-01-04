@@ -30,6 +30,12 @@ export class ConcertController {
     return await this.concertService.findOne(id);
   }
 
+  @Get('search/:name')
+  async searchConcertsByName(@Param('name') name: string) {
+    const foundConcerts = await this.concertService.searchConcertsByName(name);
+    return foundConcerts;
+  }
+
   @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   @Post()

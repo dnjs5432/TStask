@@ -55,6 +55,26 @@ export class ConcertService {
       .getOne();
   }
 
+  async searchConcertsByName(name: string) {
+    return await this.concertRepository
+      .createQueryBuilder('concert')
+      .leftJoinAndSelect('concert.schedules', 'schedules')
+      .leftJoinAndSelect('concert.user', 'user')
+      .select([
+        'concert.id',
+        'concert.title',
+        'concert.imageUrl',
+        'concert.category',
+        'concert.description',
+        'concert.venue',
+        'concert.price',
+        'schedules',
+        'user.name',
+      ])
+      .where('concert.title LIKE :name', { name: `%${name}%` })
+      .getMany();
+  }
+
   async createConcert(concertDto: ConcertDto, user) {
     const {
       title,
